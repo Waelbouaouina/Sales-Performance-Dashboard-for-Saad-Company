@@ -6,7 +6,6 @@ import os
 from datetime import datetime
 import base64
 
-# Configuration de la page
 st.set_page_config(
     page_title="Saad Bennani Trading Company - Analytics",
     page_icon="📊",
@@ -14,7 +13,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- STYLE CSS PERSONNALISÉ ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -192,7 +190,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Chic Centered Header
 with open("logo_saad.png", "rb") as f:
     logo_base64 = base64.b64encode(f.read()).decode()
 
@@ -7148,7 +7145,6 @@ LISTE_CATEGORIES = [
     "DEMI LAME CARTHAGE",
     "RADIO GOLON RX-6060BT"
 ]
-# --- DATA LOADING ---
 st.markdown("### :material/upload: Data Import")
 uploaded_file = st.file_uploader("Drop your 'Sales.csv' or Excel file here", type=['csv', 'xlsx'])
 
@@ -7181,7 +7177,6 @@ def load_data(file):
 if uploaded_file is not None:
     df = load_data(uploaded_file)
     if df is not None:
-        # --- CALCULATE METRICS ---
         t_vendu_auto = int(df['Quantité Vendue'].sum())
         t_stock_auto = int(df['Stocks'].sum())
         total_articles = len(df)
@@ -7190,7 +7185,6 @@ if uploaded_file is not None:
         df_dormant = df[(df['Stocks'] > 20) & (df['Quantité Vendue'] < 5)].sort_values(by='Stocks', ascending=False)
         df_perf_cat = df.groupby('Categorie')['Quantité Vendue'].sum().reset_index().sort_values(by='Quantité Vendue', ascending=False)
 
-        # --- KPI SECTION ---
         m1, m2, m3, m4 = st.columns(4)
         with m1:
             st.markdown('<div style="border-top: 4px solid #4f46e5; border-radius: 24px;">', unsafe_allow_html=True)
@@ -7209,7 +7203,6 @@ if uploaded_file is not None:
             st.metric(":material/warning: Stockouts", f"{nb_ruptures}", delta=f"{nb_ruptures}", delta_color="inverse")
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # --- TABS ---
         tab1, tab2, tab3 = st.tabs([":material/insights: Performance Overview", ":material/notification_important: Inventory Alerts", ":material/layers: Category Analysis"])
 
         with tab1:
@@ -7305,12 +7298,10 @@ if uploaded_file is not None:
                             pdf.set_font("Arial", "", 8); pdf.cell(120, 8, nom[:60], 1)
                             pdf.set_font("Arial", "B", 8); pdf.cell(35, 8, str(int(row['Quantité Vendue'])), 1, 0, 'C'); pdf.cell(35, 8, str(int(row['Stocks'])), 1, 1, 'C')
 
-                        # PAGE 2 : CHARTS
                         pdf.add_page(orientation='L')
                         pdf.set_font("Arial", "B", 16); pdf.cell(277, 15, "3. SALES VISUALIZATION", ln=True, align="C")
                         pdf.image("temp_saad.png", x=5, y=30, w=287) 
 
-                        # PAGE 3 : STOCKOUTS
                         if not df_alerte.empty:
                             pdf.add_page(orientation='P')
                             pdf.set_font("Arial", "B", 16); pdf.set_fill_color(255, 240, 220)
